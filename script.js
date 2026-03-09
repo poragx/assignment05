@@ -1,7 +1,7 @@
 let allIssues = [];
 let currentFilter = 'all';
 
-// Login Functionality
+
 function handleLogin() {
     const user = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
@@ -15,7 +15,7 @@ function handleLogin() {
     }
 }
 
-// Fetch All Issues
+
 async function fetchIssues() {
     showLoader(true);
     try {
