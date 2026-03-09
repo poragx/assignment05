@@ -125,4 +125,68 @@ async function handleSearch() {
         showLoader(false);
     }
 }
+// Modal Logic
+async function openModal(id) {
+    const modal = document.getElementById('issue-modal');
+    const content = document.getElementById('modal-content');
+    
+    // Fixed: Properly showing modal without breaking layout
+    modal.classList.remove('hidden');
+    modal.classList.add('flex'); 
+    content.innerHTML = '<div class="text-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-2"></div><p class="font-bold text-gray-600">Loading details...</p></div>';
+
+    try {
+        const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
+        const result = await res.json();
+        const data = result.data;
+
+        // Modal Header Badge Color
+        const statusColor = data.status === 'open' ? 'bg-green-500' : 'bg-purple-500';
+        
+        // Priority Badge Color for Modal
+        let priorityBadge = 'bg-gray-100 text-gray-800';
+        if (data.priority === 'high') priorityBadge = 'bg-red-500 text-white';
+        if (data.priority === 'medium') priorityBadge = 'bg-yellow-500 text-white';
+        if (data.priority === 'low') priorityBadge = 'bg-blue-500 text-white';
+
+        content.innerHTML = `
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-3 pr-8">${data.title}</h2>
+                <div class="flex items-center gap-3 text-sm text-gray-500 border-b pb-4">
+                    <span class="px-3 py-1 rounded-full text-white font-semibold text-xs capitalize ${statusColor}">
+                        ${data.status}
+                    </span>
+                    <span>Opened by <strong class="text-gray-700">${data.author}</strong></span>
+                    <span>•</span>
+                    <span>${new Date(data.createdAt).toLocaleDateString()}</span>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                 <div class="flex flex-wrap gap-2 mb-4">
+                    ${data.labels.map(label => `<span class="text-xs bg-gray-100 border text-gray-600 px-2 py-1 rounded font-semibold uppercase">${label}</span>`).join('')}
+                </div>
+                <p class="text-gray-600 text-base leading-relaxed bg-gray-50 p-4 rounded-lg">${data.description}</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
+                <div>
+                    <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Assignee</p>
+                    <p class="font-bold text-gray-800 text-lg">${data.assignee || 'Unassigned'}</p>
+                </div>
+                <div>
+                    <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Priority</p>
+                    <span class="px-3 py-1 rounded text-xs font-bold uppercase tracking-wider ${priorityBadge}">${data.priority}</span>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-bold transition-colors">Close</button>
+            </div>
+        `;
+    } catch (error) {
+        content.innerHTML = '<p class="text-red-500 text-center font-bold py-10">Failed to load issue details.</p>';
+    }
+}
+
 
