@@ -30,3 +30,4 @@ async function fetchIssues() {
         showLoader(false);
     }
 }
+
