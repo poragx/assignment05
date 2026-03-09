@@ -190,3 +190,21 @@ async function openModal(id) {
 }
 
 
+function closeModal() {
+    const modal = document.getElementById('issue-modal');
+    // Fixed: Hide modal properly
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function showLoader(status) {
+    const loader = document.getElementById('loader');
+    const grid = document.getElementById('issues-grid');
+    if (status) {
+        loader.classList.remove('hidden');
+        grid.classList.add('hidden');
+    } else {
+        loader.classList.add('hidden');
+        grid.classList.remove('hidden');
+    }
+}
