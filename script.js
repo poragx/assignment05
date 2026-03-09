@@ -125,6 +125,7 @@ async function handleSearch() {
         showLoader(false);
     }
 }
+
 // Modal Logic
 async function openModal(id) {
     const modal = document.getElementById('issue-modal');
@@ -188,7 +189,6 @@ async function openModal(id) {
         content.innerHTML = '<p class="text-red-500 text-center font-bold py-10">Failed to load issue details.</p>';
     }
 }
-
 
 function closeModal() {
     const modal = document.getElementById('issue-modal');
